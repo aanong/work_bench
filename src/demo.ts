@@ -1,0 +1,55 @@
+import { pinyin } from "pinyin-pro";
+import type { AppInfo, Settings } from "./types";
+export const defaultSettings: Settings = {
+  defaultMode: "launchpad",
+  launchpadShortcut: "Alt+L",
+  spotlightShortcut: "Alt+Space",
+  autostart: false,
+  hideOnBlur: true,
+  smartSort: true,
+};
+const samples = [
+  ["微信", "微", "#20ad68"],
+  ["Visual Studio Code", "</>", "#237cca"],
+  ["Microsoft Edge", "e", "#178fad"],
+  ["Figma", "F", "#9157e8"],
+  ["文件资源管理器", "▰", "#d89c34"],
+  ["Windows Terminal", ">_", "#273349"],
+  ["网易云音乐", "♪", "#d95464"],
+  ["Notion", "N", "#eceef2"],
+  ["钉钉", "D", "#328fe1"],
+  ["Microsoft Word", "W", "#306cb7"],
+  ["Microsoft Excel", "X", "#278c62"],
+  ["PowerPoint", "P", "#d7784d"],
+  ["Google Chrome", "C", "#c99835"],
+  ["Obsidian", "O", "#855fcc"],
+  ["Photoshop", "Ps", "#203f68"],
+  ["Steam", "S", "#33597b"],
+  ["7-Zip", "7z", "#697685"],
+  ["计算器", "+", "#567691"],
+  ["设置", "⚙", "#718398"],
+  ["画图", "◈", "#54aab1"],
+  ["截图工具", "✂", "#b57267"],
+  ["腾讯会议", "V", "#397fc7"],
+  ["QQ", "Q", "#49546b"],
+  ["Spotify", "≋", "#339866"],
+  ["企业微信", "企", "#358be3"],
+];
+export const demoApps: AppInfo[] = samples.map(([name, symbol, color], i) => ({
+  id: `demo-${i}`,
+  name,
+  symbol,
+  color,
+  target: "",
+  kind: "demo",
+  pinyin: pinyin(name, { toneType: "none", nonZh: "consecutive" }).replaceAll(
+    " ",
+    "",
+  ),
+  initials: pinyin(name, { pattern: "first", nonZh: "consecutive" }).replaceAll(
+    " ",
+    "",
+  ),
+  usage: 0,
+  lastUsed: 0,
+}));
