@@ -50,7 +50,7 @@ cargo test --manifest-path src-tauri/Cargo.toml
 cargo check --manifest-path src-tauri/Cargo.toml --target x86_64-pc-windows-msvc
 ```
 
-当前已在 macOS 完成前端生产构建、前后端搜索/存储/快捷键校验测试，以及 Windows 目标编译检查。Windows 的实际扫描结果、权限提升、开机启动、快捷键冲突、毛玻璃效果和 NSIS 安装包需要 Windows 实机验收；编译检查不代表运行验收完成。
+2026-10-14 已在 Windows 10（19045）完成前端 5 项测试、后端 6 项测试、生产前端构建、桌面 Debug 构建及启动验证。桌面版实际扫描到 181 个应用，正常写入缓存；重复启动保持单实例，`--hidden` 启动保持运行。详见 [Windows 验证记录](docs/Windows验证.md)。权限提升、开机启动变更、快捷键实际唤起/冲突、多显示器、毛玻璃视觉效果和 NSIS 安装流程仍需交互验收。
 
 ## 设计与结构
 

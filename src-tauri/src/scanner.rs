@@ -64,3 +64,32 @@ pub fn scan(directory: &Path) -> Result<Vec<AppInfo>, String> {
 pub fn scan(_directory: &Path) -> Result<Vec<AppInfo>, String> {
     Err("系统应用扫描仅支持 Windows。浏览器预览可查看完整界面与交互。".into())
 }
+
+#[cfg(all(test, windows))]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn scans_windows_apps_through_the_native_bridge() {
+        let directory = std::env::temp_dir().join(format!(
+            "workbench-scan-test-{}-{}",
+            std::process::id(),
+            crate::model::now()
+        ));
+        std::fs::create_dir_all(directory.join("icons")).unwrap();
+        let result = scan(&directory);
+        let _ = std::fs::remove_dir_all(&directory);
+        let apps = result.expect("Windows Shell scanner must produce valid application JSON");
+        assert!(
+            !apps.is_empty(),
+            "Windows should expose system applications"
+        );
+        let mut ids = std::collections::HashSet::new();
+        for app in apps {
+            assert!(!app.name.trim().is_empty());
+            assert!(!app.target.trim().is_empty());
+            assert!(ids.insert(app.id), "duplicate application identity");
+            assert!(matches!(app.kind.as_str(), "win32" | "packaged"));
+        }
+    }
+}

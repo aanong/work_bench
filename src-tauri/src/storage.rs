@@ -55,7 +55,11 @@ mod tests {
         let mut data = Snapshot::default();
         data.settings.default_mode = "spotlight".into();
         state.save(&data).unwrap();
+        // Saving again must replace the existing file on Windows as well.
+        data.settings.smart_sort = false;
+        state.save(&data).unwrap();
         let restored = AppState::load(directory.clone());
+        assert!(!restored.data.lock().unwrap().settings.smart_sort);
         assert_eq!(
             restored.data.lock().unwrap().settings.default_mode,
             "spotlight"

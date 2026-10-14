@@ -34,8 +34,12 @@ jobs:
           $env:WORKBENCH_ICON_DIR = Join-Path $env:RUNNER_TEMP 'workbench-icons'
           $env:WORKBENCH_SCAN_OUTPUT = Join-Path $env:RUNNER_TEMP 'workbench-scan.json'
           New-Item -ItemType Directory -Force $env:WORKBENCH_ICON_DIR | Out-Null
-          & ./src-tauri/src/scan.ps1
+          $script = Get-Content -Raw ./src-tauri/src/scan.ps1
+          $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($script))
+          & powershell.exe -NoLogo -NoProfile -NonInteractive -STA -EncodedCommand $encoded
+          if ($LASTEXITCODE -ne 0) { throw 'Shell COM scanner failed' }
           $apps = @(Get-Content -Raw $env:WORKBENCH_SCAN_OUTPUT | ConvertFrom-Json)
+          if ($apps.Count -eq 0) { throw 'No Windows applications found' }
           foreach ($app in $apps) {
             if (!$app.id -or !$app.name -or !$app.target) { throw 'Invalid app record' }
           }
